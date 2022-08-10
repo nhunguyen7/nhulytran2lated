@@ -1,0 +1,35 @@
+<!-- Add window  -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>Add Word</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+  <div class ="container">
+    <form>
+      <div>
+        <label>Enter Word</label>
+        <input type="text" id="word" autofocus> <!-- take user input -->
+      </div>
+      <button type="submit">Add Word</button>
+  </form>
+  </div>
+
+  <script>
+    const electron = require('electron');
+    const{ipcRenderer} = electron;
+
+    document.querySelector('form').addEventListener('submit', submitForm);
+
+    function submitForm(e)
+    {
+      // Stop it from saving to a file, the default
+      e.preventDefault();
+      const word = document.querySelector('#word').value;
+      ipcRenderer.send('word:add', word); // send to main.js and catch it there
+    }
+  </script>
+</body>
+</html>

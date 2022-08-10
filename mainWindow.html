@@ -1,0 +1,1362 @@
+<!-- Main window for Nhuly TRAN2LATED -->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>NHULY TRAN2LATED</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- nav bar -->
+  <div id="nav-bar" class="box-area">
+    <header>
+      <div class="wrapper">
+        <div class="logo">
+          <!-- Jump to the top when user clicks on logo -->
+          <a href="#nav-bar">
+            <img class="logo" alt=""src="logo.png" alt="logo">
+          </a>
+        </div>
+        <div class="icons">
+          <ul>
+            <button><li><a data-modal-target="#modal" href="#"><i class="fa fa-question-circle"></i></a></li></button>
+            <li><a href="https://github.com/nhunguyen7" target="_blank"><i class="fa fa-github"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/nhu-nguyen-b32353243/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+  </div>
+
+<!-- banner -->
+  <div class="banner-area">
+    <h2>Press <b>CMD+A</b> or <b>CTRL+A</b> or</h2>
+    <h2><b>go to FILE -> ADD WORD</b></h2>
+    <h2>to translate an English word</h2>
+  </div>
+
+<!-- translation table -->
+  <div class="content-area">
+    <div class="wrapper">
+
+      <ul></ul>
+
+      <table class="translate-table" border=2 id="nhulyTable" style="height:100%;width:100%;">
+      <tr>
+        <td>English</td>
+        <td>Vietnamese</td>
+        <td style="width:4%"></td>
+      </tr>
+      </table>
+
+      <!-- footer  -->
+      <div>
+        <footer id="footer">
+          <p class="copyright">&copy; 2022 NHUNGUYEN7.GITHUB.IO.</p>
+        </footer>
+      </div>
+
+      <!-- about pop-up screen -->
+      <div class="modal" id="modal">
+        <div class="modal-header">
+          <div class="title">About</div>
+            <button data-close-button class="close-button">&times;</button>
+          </div>
+        <div class="modal-body">
+          <p>Hi! I made <i>Nhuly</i> TRAN2LATED to have the most accurate translations--as well as to improve on my Vietnamese!</p>
+          <br></br>
+          <p>How To Use:</p>
+          <li>To <b>enter</b> an English word for translation: CTRL+A or CMD+A or File -> Add Word</p>
+          <li>To <b>delete</b> by row: Navigate to the last (third) column and click on the red <span class="red">X</span> of the row you want to delete</li>
+          <li>To <b>clear all</b>: CTRL+K or CMD+K or File -> Clear All</li>
+          <br></br>
+          <p>Note:</p>
+          <li>Expand screen from top to bottom for the best format</li>
+          <li>Formatting is according to desktops only (not mobile)</li>
+          <li>The add word window will also be in full screen if you have the app open in full screen</li>
+          <li>Over 600 English words have been translated on here</li>
+          <li>Use <b>singular nouns</b> if plural does not work! Since Vietnamese does not have plural words, there is no need for them when translating to Vietnamese</li>
+          <li>Use <b>present tense</b> if past or future tense does not work! There are no past tense words in Vietnamese</li>
+        </div>
+      </div>
+      <div id="overlay"></div>
+    </div>
+  </div>
+
+  <script>
+
+    // js for about pop-up screen; Used source code
+    const openModalButtons = document.querySelectorAll('[data-modal-target]')
+    const closeModalButtons = document.querySelectorAll('[data-close-button]')
+    const overlay = document.getElementById('overlay')
+
+    openModalButtons.forEach(button =>
+    {
+      button.addEventListener('click', () =>
+      {
+      const modal = document.querySelector(button.dataset.modalTarget)
+      openModal(modal)
+      })
+    })
+
+    overlay.addEventListener('click', () =>
+    {
+      const modals = document.querySelectorAll('.modal.active')
+      modals.forEach(modal =>
+      {
+        closeModal(modal)
+      })
+    })
+
+    closeModalButtons.forEach(button =>
+    {
+      button.addEventListener('click', () =>
+      {
+        const modal = button.closest('.modal')
+        closeModal(modal)
+      })
+    })
+
+    function openModal(modal)
+    {
+      if (modal == null) return
+      modal.classList.add('active')
+      overlay.classList.add('active')
+    }
+
+    function closeModal(modal)
+    {
+      if (modal == null) return
+      modal.classList.remove('active')
+      overlay.classList.remove('active')
+    }
+
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const ul = document.querySelector('ul');
+
+    // Catch add word
+    ipcRenderer.on('word:add', function(e, word)
+    {
+      var tbl = document.getElementById("nhulyTable");
+      var row = tbl.insertRow();
+      var english = row.insertCell();
+      var vietnamese = row.insertCell();
+      var del = row.insertCell();
+      english.innerHTML = word;
+
+      word = word.toLowerCase() // Cases won't matter
+
+      // Brute force translate English to Vietnamese words individually
+      if (word == "hi" || word == "hello")
+        viet = "Chào"
+      else if (word == "happy")
+        viet = "Vui"
+      else if (word == "hungry")
+        viet = "Đói bụng, Đói"
+      else if (word == "eat")
+        viet = "Ăn"
+      else if (word == "translate")
+        viet = "Dịch"
+      else if (word == "phone")
+        viet = "Điện thoại"
+      else if (word == "mom" || word == "mother")
+        viet = "Mẹ (Northern), Má (Southern)"
+      else if (word == "dad" || word == "father")
+        viet = "Ba (Southern), Bố (Northern), Cha, Tía"
+      else if (word == "water")
+        viet = "Nước"
+      else if (word == "porridge")
+        viet = Cháo
+      else if (word == "house")
+        viet = "Nhà"
+      else if (word == "student")
+        viet = "Sinh viên"
+      else if (word == "study abroad")
+        viet = "Du học"
+      else if (word == "coffee")
+        viet = "Cà phê"
+      else if (word == "green")
+        viet = "Màu xanh (lá)"
+      else if (word == "tea")
+        viet = "Trà"
+      else if (word == "college")
+        viet = "Đại học"
+      else if (word == "computer science")
+        viet = "Khoa học máy tính"
+      else if (word == "love")
+        viet = "Yêu"
+      else if (word == "boyfriend")
+        viet = "Bạn trai"
+      else if (word == "girlfriend")
+        viet = "Bạn gái"
+      else if (word == "friend")
+        viet = "Bạn"
+      else if (word == "adult")
+        viet = "Người lớn"
+      else if (word == "tree")
+        viet = "Cây"
+      else if (word == "leaf")
+        viet = "Lá"
+      else if (word == "girl")
+        viet = "Gái"
+      else if (word == "boy")
+        viet = "Trai"
+      else if (word == "discrete math")
+        viet = "Toán rời rạc"
+      else if (word == "sheep" || word == "lamb")
+        viet = "Con cừu"
+      else if (word == "blanket")
+        viet = "Mền (Southern), Chăn (Northern)"
+      else if (word == "bed")
+        viet = "Giường"
+      else if (word == "pillow")
+        viet = "Gối"
+      else if (word == "light")
+        viet = "Đèn"
+      else if (word == "sun")
+        viet = "Mặt trời"
+      else if (word == "cloud")
+        viet = "Mây"
+      else if (word == "weather")
+        viet = "Thời tiết, Khí hậu"
+      else if (word == "rain")
+        viet = "Mưa"
+      else if (word == "snow")
+        viet = "Tuyết"
+      else if (word == "hail")
+        viet = "Mưa đá"
+      else if (word == "storm")
+        viet = "Bão"
+      else if (word == "lightning")
+        viet = "Sét"
+      else if (word == "thunder")
+        viet = "Sấm"
+      else if (word == "wind")
+        viet = "Gió"
+      else if (word == "rainbow")
+        viet = "Cầu vồng"
+      else if (word == "temperature")
+        viet = "Độ"
+      else if (word == "humid")
+        viet = "Hấm, Độ ẩm"
+      else if (word == "hot")
+        viet = "Nóng"
+      else if (word == "cold")
+        viet = "Lạnh (Southern), Rét (Northern)"
+      else if (word == "animal")
+        viet = "Động vật, Thú vật"
+      else if (word == "duck")
+        viet = "Con vịt"
+      else if (word == "dog")
+        viet = "Con chó"
+      else if (word == "cat")
+        viet = "Con mèo"
+      else if (word == "deer")
+        viet = "Con nai"
+      else if (word == "bunny" || word == "rabbit")
+        viet = "Con thỏ"
+      else if (word == "bird")
+        viet = "Con chim"
+      else if (word == "school")
+        viet = "Trường"
+      else if (word == "homework")
+        viet = "Bài học"
+      else if (word == "class")
+        viet = "Lớp"
+      else if (word == "teacher" || word == "professor")
+        viet = "Giáo viên"
+      else if (word == "whiteboard")
+        viet = "Bảng trắng"
+      else if (word == "chalkboard")
+        viet = "Bảng đen"
+      else if (word == "chalk")
+        viet = "Phấn"
+      else if (word == "principal")
+        viet = "Hiệu trưởng"
+      else if (word == "backpack")
+        viet = "Cặp, Balo"
+      else if (word == "geography")
+        viet = "Địa lý"
+      else if (word == "map")
+        viet = "Bản đồ"
+      else if (word == "primary school")
+        viet = "Trường tiểu học"
+      else if (word == "secondary school")
+        viet = "Trường cấp hai"
+      else if (word == "high school")
+        viet = "Trường cấp ba"
+      else if (word == "chair")
+        viet = "Ghế"
+      else if (word == "tuition")
+        viet = "Học phí"
+      else if (word == "calculator")
+        viet = "Máy tính"
+      else if (word == "book")
+        viet = "Sách"
+      else if (word == "calendar")
+        viet = "Lịch"
+      else if (word == "pencil")
+        viet = "Bút"
+      else if (word == "compass")
+        viet = "Compa"
+      else if (word == "glue")
+        viet = "Keo"
+      else if (word == "history")
+        viet = "Lịch sử"
+      else if (word == "math")
+        viet = "(Môn) toán"
+      else if (word == "paper")
+        viet = "Giấy"
+      else if (word == "printer")
+        viet = "Máy"
+      else if (word == "question")
+        viet = "Câu hói"
+      else if (word == "ruler")
+        viet = "Cây thước (Academic), Người cai trị (Leader)"
+      else if (word == "tape")
+        viet = "Băng"
+      else if (word == "i agree")
+        viet = "Dạ, Văng, đúng rổi"
+      else if (word == "correct")
+        viet = "Dạ, Văng, đúng rổi"
+      else if (word == "and")
+        viet = "Và, Với"
+      else if (word == "i don't know")
+        viet = "Tôi không biết"
+      else if (word == "know")
+        viet = "Bết"
+      else if (word == "time")
+        viet = "Giờ, Thời gian"
+      else if (word == "month")
+        viet = "Tháng"
+      else if (word == "day")
+        viet = "Hôm nay, Ngày"
+      else if (word == "year")
+        viet = "Năm"
+      else if (word == "people")
+        viet = "Người"
+      else if (word == "everyone")
+        viet = "Mọi người"
+      else if (word == "citizen")
+        viet = "Người dân"
+      else if (word == "inside" || word == "in")
+        viet = "Ở trong, trong"
+      else if (word == "outside" || word == "out")
+        viet = "Ở ngoài, ngoài"
+      else if (word == "live")
+        viet = "Ở"
+      else if (word == "want")
+        viet = "Muốn"
+      else if (word == "new")
+        viet = "Mới"
+      else if (word == "old")
+        viet = "Cũ, Già"
+      else if (word == "work" || word == "job" || word == "profession" || word == "occupation")
+        viet = "Làm, Việc làm, Công việc"
+      else if (word == "employee")
+        viet = "Nhân viên"
+      else if (word == "manager")
+        viet = "Giám đốc"
+      else if (word == "owner")
+        viet = "Chủ"
+      else if (word == "money")
+        viet = "Tiền, Tiền bạc"
+      else if (word == "application")
+        viet = "Đăng kí"
+      else if (word == "resume")
+        viet = "Hồ sơ ứng tuyển"
+      else if (word == "interview")
+        viet = "Phỏng vấn"
+      else if (word == "train")
+        viet = "Xe lửa(vehicle), Tập huấn(practice)"
+      else if (word == "unemployed" || word == "unemployment")
+        viet = "Thất nghiệp"
+      else if (word == "salary")
+        viet = "(Tiền) lương, (Tiền) công"
+      else if (word == "computer")
+        viet = "Máy tính"
+      else if (word == "company")
+        viet = "Công ty"
+      else if (word == "hire")
+        viet = "Thuê"
+      else if (word == "quit")
+        viet = "(Từ) bỏ"
+      else if (word == "resign")
+        viet = "Từ chức"
+      else if (word == "keyboard")
+        viet = "Bàn phím"
+      else if (word == "mouse")
+        viet = "Con chuột"
+      else if (word == "penguin")
+        viet = "Con chim cánh cụt"
+      else if (word == "buffalo")
+        viet = "Con trâu"
+      else if (word == "elephant")
+        viet = "Con voi"
+      else if (word == "lion")
+        viet = "Con sư tử"
+      else if (word == "tiger")
+        viet = "Con hổ"
+      else if (word == "fish")
+        viet = "Con cá"
+      else if (word == "dolphin")
+        viet = "Con cá heo"
+      else if (word == "alligator")
+        viet = "Con cá sấu"
+      else if (word == "snake")
+        viet = "Con rắn"
+      else if (word == "ant")
+        viet = "Con kiến"
+      else if (word == "wolf")
+        viet = "Chó sói"
+      else if (word == "beetle")
+        viet = "Bọ hung"
+      else if (word == "goose")
+        viet = "Con ngỗng"
+      else if (word == "bee")
+        viet = "Con ong"
+      else if (word == "squid")
+        viet = "Con mực"
+      else if (word == "squirrel")
+        viet = "Con sóc"
+      else if (word == "spider")
+        viet = "Con nhện"
+      else if (word == "shark")
+        viet = "Cá mập"
+      else if (word == "whale")
+        viet = "Cá voi"
+      else if (word == "worm")
+        viet = "Con sâu"
+      else if (word == "butterfly")
+        viet = "Con bướm"
+      else if (word == "camel")
+        viet = "Con lạc đà"
+      else if (word == "chicken")
+        viet = "Con gà"
+      else if (word == "chipmunk")
+        viet = "Con sóc chuột"
+      else if (word == "frog")
+        viet = "Con ếch"
+      else if (word == "lizard")
+        viet = "Con thằn lằn"
+      else if (word == "cow")
+        viet = "Con bò"
+      else if (word == "coyote")
+        viet = "Con sói đồng cỏ"
+      else if (word == "pig")
+        viet = "Con lợn (Northern), Con heo (Southern)"
+      else if (word == "owl")
+        viet = "Con cú mèo"
+      else if (word == "flamingo")
+        viet = "Con chim hồng hạc"
+      else if (word == "goat")
+        viet = "Con dê"
+      else if (word == "stork")
+        viet = "Con cò"
+      else if (word == "crab")
+        viet = "Con cua"
+      else if (word == "horse")
+        viet = "Con ngựa"
+      else if (word == "jellyfish")
+        viet = "Con sứa"
+      else if (word == "koala")
+        viet = "Con gấu túi"
+      else if (word == "dragon")
+        viet = "Con  rồng"
+      else if (word == "giraffe")
+        viet = "Con hươu, Con hươu cao cổ"
+      else if (word == "zebra")
+        viet = "Con ngựa rằn"
+      else if (word == "raccoon")
+        viet = "Con cấu mèo"
+      else if (word == "how are you?" || word == "how are you")
+        viet = "Bạn có khỏe không(?)"
+      else if (word == "bye")
+        viet = "Bai, Tạm biệt"
+      else if (word == "what's new")
+        viet = "Có gì mới (không)?"
+      else if (word == "it's nice to meet you" || word == "it is nice to meet you")
+        viet = "Thật vui được gặp bạn"
+      else if (word == "it's been a while" || word == "it has been a while")
+        viet = "Đã lâu rồi"
+      else if (word == "are you ok?" || word == "are you ok")
+        viet = "Bạn có ổn không(?), Bạn có sao không"
+      else if (word == "can i ask you a question?" || word == "can i ask you a question")
+        viet = "Tôi hỏi bạn cái này được không"
+      else if (word == "what" || word == "what?")
+        viet = "Cái gì(?)"
+      else if (word == "how" || word == "how")
+        viet = "Sao"
+      else if (word == "why" || word == "why?")
+        viet = "Tại sao"
+      else if (word == "when" || word == "when?")
+        viet = "Khi nào"
+      else if (word == "like" || word == "as")
+        viet = "Như"
+      else if (word == "if")
+        viet = "Nếu, Như"
+      else if (word == "that")
+        viet = "Cái đó"
+      else if (word == "there")
+        viet = "(Ở) đó"
+      else if (word == "dream")
+        viet = "Ước mơ(aspire), nằm mơ(sleep)"
+      else if (word == "where")
+        viet = "(Ở) đâu"
+      else if (word == "star")
+        viet = "Ngôi sao"
+      else if (word == "thank you")
+        viet = "Cảm ơn"
+      else if (word == "you're welcome" || word == "welcome" || word == "you are welcome" || word == "no problem")
+        viet = "Không có gì"
+      else if (word == "one" || word == "1")
+        viet = "Một"
+      else if (word == "two" || word == "2")
+        viet = "Hai"
+      else if (word == "three" || word == "3")
+        viet = "(Số) ba"
+      else if (word == "four" || word == "4")
+        viet = "Bốn"
+      else if (word == "five" || word == "5")
+        viet = "Năm"
+      else if (word == "six" || word == "6")
+        viet = "Sáu"
+      else if (word == "seven" || word == "7")
+        viet = "Bảy"
+      else if (word == "eight" || word == "8")
+        viet = "Tám"
+      else if (word == "nine" || word == "9")
+        viet = "Chín"
+      else if (word == "ten" || word == "10")
+        viet = "Mười"
+      else if (word == "please")
+        viet = "Làm ơn, Xin"
+      else if (word == "swim")
+        viet = "Đi"
+      else if (word == "go")
+        viet = "Bơi"
+      else if (word == "shopping")
+        viet = "Mua sắm"
+      else if (word == "walk")
+        viet = "Đi bộ"
+      else if (word == "market" || word == "grocery")
+        viet = "Chợ"
+      else if (word == "run")
+        viet = "Chạy"
+      else if (word == "park")
+        viet = "Công viên"
+      else if (word == "eleven" || word == "11")
+        viet = "Mười một"
+      else if (word == "twelve" || word == "12")
+        viet = "Mười hai"
+      else if (word == "thirteen" || word == "13")
+        viet = "Mười ba"
+      else if (word == "fourteen" || word == "14")
+        viet = "Mười bốn"
+      else if (word == "fifteen" || word == "15")
+        viet = "Mười lăm"
+      else if (word == "sixteen" || word == "16")
+        viet = "Mười sáu"
+      else if (word == "seventeen" || word == "17")
+        viet = "Mười bảy"
+      else if (word == "eighteen" || word == "18")
+        viet = "Mười tám"
+      else if (word == "nineteen" || word == "19")
+        viet = "Mười chín"
+      else if (word == "twenty" || word == "20")
+        viet = "Hai mươi"
+      else if (word == "thirty" || word == "30")
+        viet = "Ba mươi"
+      else if (word == "forty" || word == "40")
+        viet = "Bốn mươi"
+      else if (word == "fifty" || word == "50")
+        viet = "Năm mươi"
+      else if (word == "sixty" || word == "60")
+        viet = "Sáu mươi"
+      else if (word == "seventy" || word == "70")
+        viet = "Bảy mươi"
+      else if (word == "eighty" || word == "80")
+        viet = "Tám mươi"
+      else if (word == "ninty" || word == "90")
+        viet = "Chín mươi"
+      else if (word == "one hundred" || word == "a hundred" || word == "hundred" || word == "100")
+        viet = "Một trăm"
+      else if (word == "one thousand" || word == "a thousand" || word == "thousand" || word == "1000")
+        viet = "Một ngàn"
+      else if (word == "one million" || word == "a million" || word == "million" || word == "1000000")
+        viet = "Một triệu"
+      else if (word == "one billion" || word == "a billion" || word == "billion" || word == "1000000000")
+        viet = "Một tỷ"
+      else if (word == "one trillion" || word == "a trillion" || word == "trillion" || word == "1000000000000")
+        viet = "Một nghìn tỷ"
+      else if (word == "number")
+        viet = "Số"
+      else if (word == "red")
+        viet = "Màu đỏ"
+      else if (word == "orange")
+        viet = "Quả cam(fruit), Màu cam(color)"
+      else if (word == "yellow")
+        viet = "Màu vàng"
+      else if (word == "blue")
+        viet = "Màu xanh trời"
+      else if (word == "purple" || word == "indigo")
+        viet = "Màu tím"
+      else if (word == "pink")
+        viet = "Màu hồng"
+      else if (word == "silver")
+        viet = "Màu bạc"
+      else if (word == "black")
+        viet = "Màu đen"
+      else if (word == "white")
+        viet = "Màu trắng, Màu xám"
+      else if (word == "hate")
+        viet = "Ghét"
+      else if (word == "fear" || word == "scared" || word == "afraid")
+        viet = "Sợ"
+      else if (word == "sad")
+        viet = "Buồn"
+      else if (word == "healthy")
+        viet = "Khỏe mạnh"
+      else if (word == "brave")
+        viet = "Dũng cảm"
+      else if (word == "calm")
+        viet = "Bình tĩnh"
+      else if (word == "careful")
+        viet = "Cẩn thận"
+      else if (word == "cautious")
+        viet = "Dè dặt"
+      else if (word == "cheerful")
+        viet = "Vui lòng"
+      else if (word == "confident")
+        viet = "Tự tin"
+      else if (word == "comfortable")
+        viet = "Thoải mái, Dễ chịu"
+      else if (word == "determined" || word == "determine")
+        viet = "Xác định"
+      else if (word == "eager")
+        viet = "Hăng hái"
+      else if (word == "efficient")
+        viet = "Có hiệu quả"
+      else if (word == "effective")
+        viet = "Hiệu quả"
+      else if (word == "emotional")
+        viet = "Xúc động"
+      else if (word == "force")
+        viet = "Bắt buộc"
+      else if (word == "fun")
+        viet = "Vui vẻ, Vui"
+      else if (word == "funny")
+        viet = "Vui"
+      else if (word == "generous")
+        viet = "Rộng lượng"
+      else if (word == "immature")
+        viet = "Chưa trưởng thành"
+      else if (word == "mature")
+        viet = "Trưởng thành"
+      else if (word == "independent")
+        viet = "Độc lập"
+      else if (word == "intense")
+        viet = "Mănh liệt"
+      else if (word == "smart")
+        viet = "Thông minh, Khôn"
+      else if (word == "loyal")
+        viet = "Trung thành"
+      else if (word == "kind")
+        viet = "Hiền"
+      else if (word == "neat")
+        viet = "Gọn gàng"
+      else if (word == "powerful" || word == "strong")
+        viet = "Mạnh, Mạnh mẽ"
+      else if (word == "quiet")
+        viet = "Im lặng"
+      else if (word == "loud")
+        viet = "Ồn, Ồn ào"
+      else if (word == "trust")
+        viet = "Tin, Lòng tin, Tin tưởng"
+      else if (word == "big" || word == "large")
+        viet = "Lớn, To"
+      else if (word == "small" || word == "tiny" || word == "little")
+        viet = "Nhỏ"
+      else if (word == "short")
+        viet = "Ngắn, Thấp, Lun"
+      else if (word == "skill" || word == "skillful")
+        viet = "Khéo"
+      else if (word == "tall")
+        viet = "Cao"
+      else if (word == "easy")
+        viet = "Dễ"
+      else if (word == "hard" || word == "difficult")
+        viet = "Cứng, Khó (khăn)"
+      else if (word == "selfish")
+        viet = "Ích kỷ"
+      else if (word == "tired")
+        viet = "Mệt (mỏi)"
+      else if (word == "cute" || word == "adorable")
+        viet = "Dễ thương, Đáng yêu"
+      else if (word == "beautiful" || word == "pretty")
+        viet = "Đẹp, Xinh"
+      else if (word == "ugly")
+        viet = "Xấu xí"
+      else if (word == "circle")
+        viet = "Tròn"
+      else if (word == "square")
+        viet = "Vuông"
+      else if (word == "fat")
+        viet = "Mập"
+      else if (word == "early")
+        viet = "Sớm"
+      else if (word == "late")
+        viet = "Muộn"
+      else if (word == "fast")
+        viet = "Nhanh"
+      else if (word == "slow")
+        viet = "Chậm"
+      else if (word == "young")
+        viet = "Trẻ"
+      else if (word == "what are you doing?" || word == "what are you doing")
+        viet = "Bạn đang làm gì đấy(?)"
+      else if (word == "crowd")
+        viet = "Đông"
+      else if (word == "empty")
+        viet = "Trống, Vắng"
+      else if (word == "nervous" || word == "anxious")
+        viet = "Hồi hộp, Lo lắng"
+      else if (word == "private")
+        viet = "Riêng"
+      else if (word == "public")
+        viet = "Công cộng"
+      else if (word == "safe")
+        viet = "An toàn"
+      else if (word == "single")
+        viet = "Độc thân(relationship)"
+      else if (word == "couple")
+        viet = "Cặp đôi"
+      else if (word == "wet")
+        viet = "Ướt"
+      else if (word == "dry")
+        viet = "Khô"
+      else if (word == "lucky")
+        viet = "May mắn"
+      else if (word == "jealous")
+        viet = "Ghen"
+      else if (word == "innocent")
+        viet = "Vô tội"
+      else if (word == "ready")
+        viet = "Sẳn sàng"
+      else if (word == "normal")
+        viet = "Bình thường"
+      else if (word == "abnormal")
+        viet = "Khác thường, Không thường"
+      else if (word == "simple")
+        viet = "Đơn giản"
+      else if (word == "triangle")
+        viet = "Tam giác"
+      else if (word == "rectangle")
+        viet = "Hình chữ nhật"
+      else if (word == "hexagon")
+        viet = "Hình lục giác"
+      else if (word == "how was your day?" || word == "how was your day")
+        viet = "Ngày hôm nay của bạn thế nào(?), Ngày hôm nay của bạn sao rồi(?)"
+      else if (word == "good night")
+        viet = "Chúc ngủ ngon"
+      else if (word == "electronic")
+        viet = "Điện tử"
+      else if (word == "televison")
+        viet = "Tivi"
+      else if (word == "clock" || word == "watch")
+        viet = " Đồng hồ"
+      else if (word == "rice cooker")
+        viet = "Nồi cơm (điện)"
+      else if (word == "hair dryer")
+        viet = "Máy sấy tóc"
+      else if (word == "stove")
+        viet = "Bếp"
+      else if (word == "finish")
+        viet = "Kết thúc, Xong"
+      else if (word == "start")
+        viet = "Bắt đầu"
+      else if (word == "spring")
+        viet = "Mùa xuân"
+      else if (word == "summer")
+        viet = "Mùa hè"
+      else if (word == "me" || word == "i")
+        viet = "Tôi (informal), Mình"
+      else if (word == "you")
+        viet = "Mày (informal), Bạn"
+      else if (word == "us" || word == "we")
+        viet = "Chúng tôi, Mình"
+      else if (word == "aunt")
+        viet = "Dì, Bác gái, Thím, Cô"
+      else if (word == "uncle")
+        viet = "Chú, Bác, Cậu"
+      else if (word == "grandpa" ||  word == "grandfather")
+        viet = "Ông, Ông nội (paternal side), Ông ngoại (maternal side)"
+      else if (word == "grandma" ||  word == "grandmother")
+        viet = "Bà, Bà nội (paternal side), Bà ngoại (maternal side)"
+      else if (word == "grandparent")
+        viet = "Ông bà"
+      else if (word == "cousin")
+        viet = "Họ, Anh chị em họ"
+      else if (word == "niece")
+        viet = "Cháu gái"
+      else if (word == "nephew")
+        viet = "Cháu trai"
+      else if (word == "fall" || word == "autumn")
+        viet = "Mùa thu"
+      else if (word == "winter")
+        viet = "Mùa đông"
+      else if (word == "kitchen")
+        viet = "Phòng bếp"
+      else if (word == "frying pan")
+        viet = "Chảo chiên, Cái chảo"
+      else if (word == "knife")
+        viet = "Dao"
+      else if (word == "fork")
+        viet = "Cái nĩa"
+      else if (word == "spoon")
+        viet = "Cái muỗng (Southern), Cái thìa (Northern)"
+      else if (word == "kettle")
+        viet = "Ấm đun nước"
+      else if (word == "refrigerator")
+        viet = "Tủ lạnh"
+      else if (word == "cutting board")
+        viet = "Cái thớt"
+      else if (word == "bowl")
+        viet = "Cái chén, Cái tô (Southern), Cái bát (Northern)"
+      else if (word == "plate")
+        viet = "Cái , đĩa"
+      else if (word == "can opener")
+        viet = "Đồ khui hộp"
+      else if (word == "saucepan")
+        viet = "Xoong"
+      else if (word == "pot")
+        viet = "Nồi"
+      else if (word == "dish soap")
+        viet = "Xà bông rửa chén"
+      else if (word == "sponge")
+        viet = "Miếng bọt biển"
+      else if (word == "grill")
+        viet = "Nướng"
+      else if (word == "fan")
+        viet = "Cái quạt(machine)"
+      else if (word == "soap")
+        viet = "Xà bông"
+      else if (word == "strainer")
+        viet = "Bộ lọc"
+      else if (word == "napkin")
+        viet = "Khăn ăn"
+      else if (word == "food")
+        viet = "Món ăn, Đồ ăn"
+      else if (word == "apple")
+        viet = "Trái táo (Southern), Quả táo (Northern)"
+      else if (word == "avocado")
+        viet = "Trái bơ (Southern), Quả bơ (Northern)"
+      else if (word == "corn")
+        viet = "Bắp, Ngô"
+      else if (word == "almond")
+        viet = "Hạnh nhân, Quả hạnh(Northern)"
+      else if (word == "noodle")
+        viet = "Mì"
+      else if (word == "black bean")
+        viet = "Đậu đen"
+      else if (word == "bean")
+        viet = "Đậu"
+      else if (word == "broccoli")
+        viet = "Súp lơ xanh"
+      else if (word == "carrot")
+        viet = "Cà rốt"
+      else if (word == "cabbage")
+        viet = "Bắp cải"
+      else if (word == "chocolate")
+        viet = "Sô cô la"
+      else if (word == "celery")
+        viet = "(Rau) cần tây"
+      else if (word == "snack")
+        viet = "Đồ ăn vặt"
+      else if (word == "coffee")
+        viet = "Cà phê"
+      else if (word == "tea")
+        viet = "Trà"
+      else if (word == "egg")
+        viet = "Trứng"
+      else if (word == "egg roll")
+        viet = "Chả giò"
+      else if (word == "fruit")
+        viet = "Trái cây"
+      else if (word == "spring roll")
+        viet = "Gỏi cuốn"
+      else if (word == "pho")
+        viet = "Phở"
+      else if (word == "sandwich")
+        viet = "Bánh mì"
+      else if (word == "garlic")
+        viet = "Tỏi"
+      else if (word == "onion")
+        viet = "Củ hành"
+      else if (word == "green onion")
+        viet = "Hành lá"
+      else if (word == "ice cream")
+        viet = "Kem"
+      else if (word == "ice")
+        viet = "Đã"
+      else if (word == "spinach")
+        viet = "Rau chân vịt"
+      else if (word == "water spinach")
+        viet = "Rau muống"
+      else if (word == "bitter melon")
+        viet = "Trái khổ qua, Mướp đắng"
+      else if (word == "tomato")
+        viet = "Trái cà chua (Southern), Quả cà chua (Northern)"
+      else if (word == "potato")
+        viet = "Củ khoai tây"
+      else if (word == "yogurt")
+        viet = "Da ua"
+      else if (word == "jelly")
+        viet = "Thạch, Rau câu"
+      else if (word == "walnut")
+        viet = "Óc chó"
+      else if (word == "meat")
+        viet = "Thịt"
+      else if (word == "vegetable")
+        viet = "Rau"
+      else if (word == "vegetarian")
+        viet = "Ăn chay"
+      else if (word == "vegan")
+        viet = "Thuần chay, Ăn chay trường"
+      else if (word == "ramen")
+        viet = "Mì gói"
+      else if (word == "sour")
+        viet = "Chua"
+      else if (word == "sweet")
+        viet = "Ngọt"
+      else if (word == "bitter")
+        viet = "Đắng"
+      else if (word == "spicy")
+        viet = "Cay"
+      else if (word == "salt")
+        viet = "Muối"
+      else if (word == "sugar")
+        viet = "Đường"
+      else if (word == "msg" || word == "monosodium glutamate")
+        viet = ""
+      else if (word == "fish sauce")
+        viet = "Nước mắm"
+      else if (word == "oil")
+        viet = "Dầu"
+      else if (word == "vinegar")
+        viet = "Giấm"
+      else if (word == "sauce")
+        viet = "Nước xốt"
+      else if (word == "soy sauce")
+        viet = "Nước tương (Southern), Xì dầu (Northern)"
+      else if (word == "country")
+        viet = "Nước"
+      else if (word == "australia")
+        viet = "Úc, Châu Úc (contient), Nước Úc (country)"
+      else if (word == "netherland")
+        viet = "(Nước) Hà Lan"
+      else if (word == "asia")
+        viet = "Châu Á, Á châu"
+      else if (word == "north america")
+        viet = "Bắc Mỹ"
+      else if (word == "south america")
+        viet = "Nam Mỹ"
+      else if (word == "antarctica")
+        viet = "Nam Cực"
+      else if (word == "arctic")
+        viet = "Bắc cực"
+      else if (word == "europe")
+        viet = "Châu Âu, Âu châu"
+      else if (word == "africa")
+        viet = "Châu phi"
+      else if (word == "india")
+        viet = "Ấn Độ"
+      else if (word == "cambodia")
+        viet = "(Nước) Campuchia"
+      else if (word == "china")
+        viet = "Trung Quốc"
+      else if (word == "canada")
+        viet = "(Nước) Canađa"
+      else if (word == "germany")
+        viet = "(Nước) Đức"
+      else if (word == "japan")
+        viet = "Nước Nhật, (Nước) Nhật Bản"
+      else if (word == "nation")
+        viet = "Quốc gia"
+      else if (word == "laos")
+        viet = "(Nước) Lào"
+      else if (word == "new zealand")
+        viet = "New Zaland"
+      else if (word == "north korea")
+        viet = "Bắc Hàn"
+      else if (word == "south korea")
+        viet = "Nam Hàn"
+      else if (word == "singapore")
+        viet = "(Nước) Xin-ga-po"
+      else if (word == "taiwan")
+        viet = "(Nước) Đài loan"
+      else if (word == "philippines")
+        viet = "(Nước) Phi-líp-pin"
+      else if (word == "mexico")
+        viet = "(Nước) Mêhicô"
+      else if (word == "united states" || word == "america")
+        viet = "Nước Mỹ, Hoa Kỳ"
+      else if (word == "spain")
+        viet = "(Nước) Tây Ban Nha"
+      else if (word == "sweden")
+        viet = "(Nước) Thụy Điển"
+      else if (word == "thailand")
+        viet = "(Nước) Thái Lan"
+      else if (word == "france")
+        viet = "Nước Pháp"
+      else if (word == "united kingdom" || word == "uk")
+        viet = "Vương Quốc Anh"
+      else if (word == "ukraine")
+        viet = "(Nước) Ucraina"
+      else if (word == "russia")
+        viet = "(Nước) Nga"
+      else if (word == "italy")
+        viet = "Nước Ý"
+      else if (word == "nature")
+        viet = "Thiên nhiên"
+      else if (word == "beach")
+        viet = "(Bãi) biển"
+      else if (word == "korea")
+        viet = "Hàn Quốc"
+      else if (word == "state")
+        viet = "Tiểu bang"
+      else if (word == "cave")
+        viet = "Hang"
+      else if (word == "cliff")
+        viet = "Vách đá"
+      else if (word == "hill")
+        viet = "Đồi"
+      else if (word == "mountain")
+        viet = "(Đồi) núi"
+      else if (word == "sunset")
+        viet = "Hoàng hôn, Mặt trời lặn"
+      else if (word == "sunrise")
+        viet = "Bình minh, Mặt trời mọc"
+      else if (word == "countryside")
+        viet = "Quê"
+      else if (word == "desert")
+        viet = "Sa mạc"
+      else if (word == "field")
+        viet = "Đồng ruộng"
+      else if (word == "farm")
+        viet = "Nông trại"
+      else if (word == "forest")
+        viet = "Rừng"
+      else if (word == "lake")
+        viet = "Hồ"
+      else if (word == "pond")
+        viet = "Ao"
+      else if (word == "land")
+        viet = "Đất"
+      else if (word == "ocean" || word == "sea")
+        viet = "Biển"
+      else if (word == "volcano")
+        viet = "Núi lửa"
+      else if (word == "valley")
+        viet = "Thung lũng"
+      else if (word == "fire")
+        viet = "Lửa"
+      else if (word == "branch")
+        viet = "Cành"
+      else if (word == "cup")
+        viet = "Cúp"
+      else if (word == "dessert")
+        viet = "Món tráng miệng"
+      else if (word == "glass")
+        viet = "Ly (container), Kính (material)"
+      else if (word == "mud")
+        viet = "Bùn đất"
+      else if (word == "sand")
+        viet = "Cát"
+      else if (word == "scenery")
+        viet = "Cảnh"
+      else if (word == "waterfall")
+        viet = "Thác nước"
+      else if (word == "wave")
+        viet = "Sóng (ocean), Vẫy tay (gesture)"
+      else if (word == "soil")
+        viet = "Đất"
+      else if (word == "grass")
+        viet = "Cỏ"
+      else if (word == "flower")
+        viet = "Bông Hoa, Bông, Hoa"
+      else if (word == "earth")
+        viet = "Trái đất"
+      else if (word == "season")
+        viet = "Mùa"
+      else if (word == "trash can")
+        viet = "Thùng rác"
+      else if (word == "chopstick")
+        viet = "Đũa"
+      else if (word == "sky")
+        viet = "(Bầu) trời"
+      else if (word == "sunny")
+        viet = "Nắng"
+      else if (word == "stairs")
+        viet = "Cầu thang"
+      else if (word == "toothpick")
+      viet = "Tăm xỉa răng"
+      else if (word == "star")
+        viet = "Ngôi sao"
+      else if (word == "cashier")
+        viet = "Thu ngân"
+      else if (word == "janitor")
+        viet = "Người gác cổng"
+      else if (word == "accountant")
+        viet = "Kế toán"
+      else if (word == "server")
+        viet = "Người phục vụ"
+      else if (word == "doctor")
+        viet = "Bác sĩ"
+      else if (word == "nurse")
+        viet = "Y tá"
+      else if (word == "engineer")
+        viet = "Kỹ sư"
+      else if (word == "software engineer")
+        viet = "Kỹ sư phần mềm"
+      else if (word == "police")
+        viet = "Cảnh sát"
+      else if (word == "electrician")
+        viet = "Thợ điện"
+      else if (word == "mechanic")
+        viet = "Công nhân cơ khí"
+      else if (word == "lawyer")
+        viet = "Luật sư"
+      else if (word == "vehicle")
+        viet = "Xe cộ"
+      else if (word == "taxi")
+        viet = "Xe tắc xi"
+      else if (word == "car")
+        viet = "Xe hơi"
+      else if (word == "bicycle")
+        viet = "Xe đạp"
+      else if (word == "bus")
+        viet = "Xe buýt"
+      else if (word == "ambulance")
+        viet = "Xe cấp cứu"
+      else if (word == "airplane")
+        viet = "Máy bay"
+      else if (word == "subway")
+        viet = "Xe điện ngầm"
+      else if (word == "train")
+        viet = "Xe tàu, Xe lửa"
+      else if (word == "helicopter")
+        viet = "(Máy bay) trực thăng"
+      else if (word == "boat")
+        viet = "Thuyền"
+      else if (word == "balloon")
+        viet = "Bong bóng"
+      else if (word == "eye")
+        viet = "(Cái) Mắt"
+      else if (word == "mouth")
+        viet = "(Cái) Miệng"
+      else if (word == "lip")
+        viet = "(Cái) Môi"
+      else if (word == "stomach")
+        viet = "(Cái) bụng"
+      else if (word == "nose")
+        viet = "(Cái) Mũi"
+      else if (word == "hand")
+        viet = "(Cái) Tay"
+      else if (word == "foot")
+        viet = "(Bàn) Chân"
+      else if (word == "shoulder")
+        viet = "(Cái) Vai"
+      else if (word == "neck")
+        viet = "(Cái) cổ"
+      else if (word == "elbow")
+        viet = "Khuỷu tay"
+      else if (word == "knee")
+        viet = "Đầu gối"
+      else if (word == "heart")
+        viet = "Trái tim"
+      else if (word == "head")
+        viet = "(Cái) đầu"
+      else if (word == "chest")
+        viet = "Ngực"
+      else if (word == "arm")
+        viet = "Cánh tay"
+      else if (word == "tongue")
+        viet = "Lưỡi"
+      else if (word == "kidney")
+        viet = "Thận"
+      else if (word == "lung")
+        viet = "Phổi"
+      else if (word == "bone")
+        viet = "Xương"
+      else if (word == "ankle")
+        viet = "Mắt cá chân"
+      else if (word == "toe")
+        viet = "Ngón chân"
+      else if (word == "face")
+        viet = "Mặt"
+      else if (word == "brain")
+        viet = "Não"
+      else if (word == "awkward")
+        viet = "Khờ"
+      else if (word == "skinny")
+        viet = "Ốm"
+      else if (word == "sink")
+        viet = "Bồn rửa"
+      else if (word == "bathtub")
+        viet = "Bồn tắm"
+      else if (word == "bed")
+        viet = "Bồn tắm"
+      else if (word == "drawer")
+        viet = "Ngăn kéo, Ngăn tủ"
+      else if (word == "clothes" || word == "clothing")
+        viet = "Quần áo"
+      else if (word == "pants")
+        viet = "Quần dài"
+      else if (word == "shirt")
+        viet = "Áo"
+      else if (word == "shorts")
+        viet = "Quần ngắn"
+      else if (word == "window")
+        viet = "Cửa sổ"
+      else if (word == "wall")
+        viet = "Tường"
+      else if (word == "door")
+        viet = "Cức"
+      else if (word == "painting")
+        viet = "Bức tranh"
+      else if (word == "bed sheet")
+        viet = "Ga giường"
+      else if (word == "pillow")
+        viet = "(Cái) gối"
+      else if (word == "blanket")
+        viet = "(Cái) mền"
+      else if (word == "jacket" || word == "coat")
+        viet = "Áo khoác"
+      else if (word == "dress")
+        viet = "Váy, Đầm"
+      else if (word == "bedroom")
+        viet = "Phòng ngủ"
+      else if (word == "living room")
+        viet = "Phòng khách"
+      else if (word == "spell")
+        viet = "Đánh vần"
+      else if (word == "charger" || word == "charge")
+        viet = "Sạc điện"
+      else if (word == "wire")
+        viet = "Dây điện, Dây"
+      else if (word == "man")
+        viet = "Người đàn ông"
+      else if (word == "woman")
+        viet = "Người đàn bà"
+      else if (word == "flag")
+        viet = "Lá cờ"
+      else if (word == "mail")
+        viet = "Thư"
+      else if (word == "mailbox")
+        viet = "Thư"
+      else if (word == "passport")
+        viet = "Hộ chiếu"
+      else if (word == "calendar")
+        viet = "Lịch"
+      else if (word == "what is this?" || word == "what's this?" || word == "what is this" || word == "what's this")
+        viet = "Cái gì đây(?)"
+      else if (word == "it's okay" || word == "it is okay")
+        viet = "Không sao"
+      else if (word == "bottle")
+        viet = "Chai"
+      else if (word == "no")
+        viet = "Không "
+      else if (word == "yes")
+        viet = "Ừ (informal), Dạ (Southern/formal), Vâng (Northern/formal)"
+      else if (word == "good")
+        viet = "Tốt"
+      else if (word == "bad")
+        viet = "Ở đây "
+      else if (word == "this")
+        viet = "Này"
+      else if (word == "here")
+        viet = "Ừ (informal), Dạ (Southern/formal), Vâng (Northern/formal)"
+      else if (word == "ceiling")
+        viet = "Trần nhà"
+      else if (word == "floor")
+        viet = "Nền nhà"
+      else if (word == "street")
+        viet = "Đường"
+      else if (word == "minute")
+        viet = "Phút"
+      else if (word == "hour")
+        viet = "Giờ, Tiếng"
+      else if (word == "second")
+        viet = "Giây"
+      else if (word == "glasses")
+        viet = "Kính đeo"
+      else if (word == "travel")
+        viet = "Đi du lịch"
+      else if (word == "monday")
+        viet = "Thứ hai"
+      else if (word == "tuesday")
+        viet = "Thứ ba"
+      else if (word == "wednesday")
+        viet = "Thứ Tư"
+      else if (word == "thursday")
+        viet = "Thứ năm"
+      else if (word == "friday")
+        viet = "Thứ sáu"
+      else if (word == "saturday")
+        viet = "Thứ bảy"
+      else if (word == "sunday")
+        viet = "Chủ nhật"
+      else
+        viet = "Error: No translation for that word currently / Hiện không có bản dịch cho chữ này"
+
+      vietnamese.innerHTML = viet;
+      del.innerHTML = "X";
+
+      // Set the words to new row, if not the row
+      // will not have an index and will not be able to be removed
+      removeRow();
+    });
+
+    // Remove row function for when user clicks the 'X'
+    var rIndex, table = document.getElementById("nhulyTable");
+
+    function removeRow()
+    {
+      for(var i = 1; i < table.rows.length; i++)
+      {
+        table.rows[i].cells[2].onclick = function()
+        {
+          var check = confirm("Do you want to delete this row?")
+          if (check == true)
+          {
+            rIndex = this.parentElement.rowIndex;
+            table.deleteRow(rIndex);
+          }
+        };
+      }
+    }
+    removeRow();
+
+    // Catch clear words
+    ipcRenderer.on('word:clear', function()
+    {
+      var check = confirm("WARNING: THIS ACTION CANNOT BE UNDONE\n\nARE YOU SURE YOU WANT TO CLEAR ALL?")
+      if (check == true)
+      {
+        var table = document.getElementById("nhulyTable");
+        var row = table.rows.length;
+        for (var i = row - 1; i > 0; i--)
+        {
+          table.deleteRow(i);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
