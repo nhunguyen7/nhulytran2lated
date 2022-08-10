@@ -25,3 +25,19 @@ This project was intended for me to always have the most accurate translations (
 The user can either press CMD+A (mac), CTRL+A (windows), or navigate to the menu bar > Files > Add Word. A window will pop up for the user to enter in their word. After the user enters in a word, the window will close and the word will show up on the table in main window with its Vietnamese translation.
 At any point that the user wants to delete a row of a word, they can do so by going to the last column in the table and click on the **X**. A pop up window will appear asking the user if they want to delete the row. 
 If a user wishes to clear the entire table, they can do so by pressing CMD+K, CTRL+K, or navigate to the menu bar > Files > Clear All.
+## Credits
+Code I used and modified:
+
+Used as a start file (modified mainWindow.html greatly): 
+https://github.com/bradtraversy/electronshoppinglist
+
+To style and format translation table (translate-table):
+https://codepen.io/dcode-software/pen/dLVwOY
+
+To create the about pop-up screen (question mark icon in the top right)
+https://github.com/WebDevSimplified/Vanilla-JavaScript-Modal
+
+To create, style, and format navigation bar icons at the top right corner:
+https://codepen.io/easywebcode/pen/qBBvNEO
+
+
